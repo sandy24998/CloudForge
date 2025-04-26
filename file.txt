@@ -1,3 +1,4 @@
 first file
 feature 1 changes
 Line from master branch
+Line from feature branch
