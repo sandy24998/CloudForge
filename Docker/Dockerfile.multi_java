@@ -1,0 +1,14 @@
+FROM openjdk:21 as builder
+
+WORKDIR /app
+COPY target/app.jar app.jar
+
+FROM openjdk:21-jre-slim
+WORKDIR /app
+
+RUN addgroup -S devops && adduser -S sandeep -G devops
+COPY --from=builder /app/app.jar app.jar
+RUN chown sandeep:devops app.jar
+
+USER sandeep
+ CMD ["java", "-jar", "app.jar"]
