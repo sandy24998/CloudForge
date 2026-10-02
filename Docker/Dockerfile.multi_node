@@ -1,0 +1,21 @@
+FROM node:20-alpine as builder
+
+WORKDIR /app
+COPY package*.json .
+RUN npm CI
+COPY . .
+RUN npm run build
+
+FROM node:20-alpine
+WORKDIR /app
+
+RUN addgroup -S g1 && adduser -S u1 -G g1
+
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package.json ./
+
+USER u1
+EXPOSE 3000
+CMD ["node", "dist/main.js"]
+
